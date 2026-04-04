@@ -1,0 +1,13 @@
+services:
+  traefik-route-manager:
+    build: .
+    container_name: traefik-route-manager
+    restart: unless-stopped
+    ports:
+      - "3080:3000"
+    volumes:
+      - /etc/traefik/dynamic:/config
+    environment:
+      - CONFIG_DIR=/config
+      - BACKUP_DIR=/config/.backups
+      - PORT=3000
