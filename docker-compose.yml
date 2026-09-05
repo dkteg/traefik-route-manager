@@ -7,7 +7,13 @@ services:
       - "3080:3000"
     volumes:
       - /etc/traefik/dynamic:/config
+      # Optional: Mount full /etc/traefik as read-only to enable static config, access log, and certificate inspection
+      - /etc/traefik:/etc/traefik:ro
     environment:
       - CONFIG_DIR=/config
       - BACKUP_DIR=/config/.backups
       - PORT=3000
+      - TRAEFIK_ROOT_DIR=/etc/traefik
+      - TRAEFIK_API_URL=http://host.docker.internal:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

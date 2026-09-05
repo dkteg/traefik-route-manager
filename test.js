@@ -365,6 +365,125 @@ async function runTests() {
     assertEqual(status, 400);
   });
 
+  // ── ServersTransports ──────────────────────────
+  console.log('\n🚢 ServersTransports');
+  await test('POST create HTTP serversTransport', async () => {
+    const { status, body } = await req('POST', '/api/files/test-routes.yml/serversTransports', {
+      name: 'skip-verify',
+      config: { insecureSkipVerify: true }
+    });
+    assertEqual(status, 200);
+    assert(body.success);
+    const { body: file } = await req('GET', '/api/files/test-routes.yml');
+    assert(file.http.serversTransports['skip-verify'], 'Transport should be saved');
+  });
+
+  await test('PUT update HTTP serversTransport', async () => {
+    const { status } = await req('PUT', '/api/files/test-routes.yml/serversTransports/skip-verify', {
+      config: { insecureSkipVerify: false }
+    });
+    assertEqual(status, 200);
+  });
+
+  await test('DELETE remove HTTP serversTransport', async () => {
+    const { status, body } = await req('DELETE', '/api/files/test-routes.yml/serversTransports/skip-verify');
+    assertEqual(status, 200);
+    assert(body.success);
+  });
+
+  // ── Unified Bundle Creation ────────────────────
+  console.log('\n📦 Unified Route + Service + Middleware Bundle');
+  await test('POST /api/files/:name/bundle creates router and service atomically', async () => {
+    const bundlePayload = {
+      proto: 'http',
+      router: {
+        name: 'unified-router',
+        config: { rule: 'Host(`unified.example.com`)', service: 'unified-service' }
+      },
+      service: {
+        name: 'unified-service',
+        config: { loadBalancer: { servers: [{ url: 'http://10.0.0.99:8080' }] } }
+      }
+    };
+    const { status, body } = await req('POST', '/api/files/test-routes.yml/bundle', bundlePayload);
+    assertEqual(status, 200);
+    assert(body.success);
+    assertEqual(body.router, 'unified-router');
+    assertEqual(body.service, 'unified-service');
+
+    const { body: file } = await req('GET', '/api/files/test-routes.yml');
+    assert(file.http.routers['unified-router'], 'Router should exist');
+    assert(file.http.services['unified-service'], 'Service should exist');
+  });
+
+  await test('POST /api/files/:name/bundle creates router, service, and middleware', async () => {
+    const bundlePayload = {
+      proto: 'http',
+      router: {
+        name: 'full-bundle-router',
+        config: {
+          rule: 'Host(`full.example.com`)',
+          service: 'full-bundle-service',
+          middlewares: ['full-bundle-mw']
+        }
+      },
+      service: {
+        name: 'full-bundle-service',
+        config: { loadBalancer: { servers: [{ url: 'http://10.0.0.100:9000' }] } }
+      },
+      middleware: {
+        name: 'full-bundle-mw',
+        config: { headers: { SSLRedirect: true } }
+      }
+    };
+    const { status, body } = await req('POST', '/api/files/test-routes.yml/bundle', bundlePayload);
+    assertEqual(status, 200);
+    assert(body.success);
+
+    const { body: file } = await req('GET', '/api/files/test-routes.yml');
+    assert(file.http.routers['full-bundle-router'], 'Router should exist');
+    assert(file.http.services['full-bundle-service'], 'Service should exist');
+    assert(file.http.middlewares['full-bundle-mw'], 'Middleware should exist');
+  });
+
+  // ── Raw YAML & Backup Diff ─────────────────────
+  console.log('\n📝 Raw YAML & Backup Diff');
+  await test('PUT /api/files/:name/raw saves valid YAML', async () => {
+    const newYaml = 'http:\n  routers:\n    custom:\n      rule: Host(`raw.com`)\n      service: custom-svc\n';
+    const { status, body } = await req('PUT', '/api/files/test-routes.yml/raw', { raw: newYaml });
+    assertEqual(status, 200);
+    assert(body.success);
+  });
+
+  await test('PUT /api/files/:name/raw rejects invalid YAML', async () => {
+    const badYaml = 'http:\n  routers:\n    bad: [unclosed';
+    const { status } = await req('PUT', '/api/files/test-routes.yml/raw', { raw: badYaml });
+    assertEqual(status, 400);
+  });
+
+  await test('GET /api/backups/:name/diff returns unified diff', async () => {
+    const { body: backups } = await req('GET', '/api/backups');
+    const backup = backups.find(b => b.name.startsWith('test-routes.yml'));
+    const { status, body } = await req('GET', `/api/backups/${encodeURIComponent(backup.name)}/diff`);
+    assertEqual(status, 200);
+    assert(body.originalFile === 'test-routes.yml', 'Should identify original file');
+    assert(Array.isArray(body.diff), 'Diff should be an array of lines');
+  });
+
+  // ── Traefik System Endpoints ───────────────────
+  console.log('\n🔭 Traefik Observability');
+  await test('GET /api/traefik/capabilities returns system capabilities', async () => {
+    const { status, body } = await req('GET', '/api/traefik/capabilities');
+    assertEqual(status, 200);
+    assert('configDir' in body, 'Should include configDir');
+  });
+
+  await test('GET /api/traefik/entrypoints discovers entrypoints', async () => {
+    const { status, body } = await req('GET', '/api/traefik/entrypoints');
+    assertEqual(status, 200);
+    assert(Array.isArray(body.entrypoints), 'Should return entrypoints array');
+  });
+
   // ── Summary ────────────────────────────────────
   console.log(`\n${'═'.repeat(50)}`);
   console.log(`  Results: ${passed} passed, ${failed} failed, ${passed + failed} total`);

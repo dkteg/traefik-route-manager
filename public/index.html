@@ -4,98 +4,205 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Traefik Route Manager</title>
-  <meta name="description" content="A modern web UI for managing Traefik dynamic configuration files — routers, services, and middlewares.">
+  <meta name="description" content="A modern, streamlined web UI for managing Traefik dynamic configuration, services, and routes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css?v=2.5.2">
 </head>
 <body>
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="logo">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="8" fill="url(#logo-grad)"/>
-          <path d="M8 12h16M8 16h12M8 20h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-          <defs><linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#06b6d4"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
-        </svg>
-        <div>
+        <div class="logo-mark">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>
+          </svg>
+        </div>
+        <div class="logo-text">
           <h1>Traefik</h1>
-          <span>Route Manager</span>
+          <span class="badge-tag">ROUTE MANAGER</span>
         </div>
       </div>
     </div>
 
+    <div class="sidebar-group-label">CONFIGURATION</div>
     <nav class="sidebar-nav">
       <a href="#" class="nav-item active" data-view="dashboard" id="nav-dashboard">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        Dashboard
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-view="topology" id="nav-topology">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span>Topology</span>
+        <span class="nav-badge" id="nav-badge-topo">Flow</span>
       </a>
       <a href="#" class="nav-item" data-view="routers" id="nav-routers">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-        Routers
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+        <span>Routers</span>
+        <span class="nav-count" id="count-routers">0</span>
       </a>
       <a href="#" class="nav-item" data-view="services" id="nav-services">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M6 14h.01"/></svg>
-        Services
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M6 14h.01"/><path d="M10 10h8M10 14h8"/></svg>
+        <span>Services</span>
+        <span class="nav-count" id="count-services">0</span>
       </a>
       <a href="#" class="nav-item" data-view="middlewares" id="nav-middlewares">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        Middlewares
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span>Middlewares</span>
+        <span class="nav-count" id="count-middlewares">0</span>
+      </a>
+      <a href="#" class="nav-item" data-view="transports" id="nav-transports">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M7 7l-5 5 5 5M17 7l5 5-5 5"/></svg>
+        <span>Transports</span>
+        <span class="nav-count" id="count-transports">0</span>
       </a>
       <a href="#" class="nav-item" data-view="files" id="nav-files">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-        Config Files
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        <span>Config Files</span>
+        <span class="nav-count" id="count-files">0</span>
       </a>
       <a href="#" class="nav-item" data-view="backups" id="nav-backups">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-        Backups
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+        <span>Backups & Diff</span>
+      </a>
+
+      <div class="sidebar-group-label" style="margin-top: 14px;">OBSERVABILITY</div>
+      <a href="#" class="nav-item" data-view="logs" id="nav-logs">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <span>Access Logs</span>
+        <span class="status-dot-pulse" id="logs-pulse" title="Live access log"></span>
+      </a>
+      <a href="#" class="nav-item" data-view="certificates" id="nav-certificates">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span>Certificates</span>
+      </a>
+      <a href="#" class="nav-item" data-view="static" id="nav-static">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span>Traefik Static</span>
       </a>
     </nav>
 
     <div class="sidebar-footer">
-      <div class="env-badge">
-        <span class="dot"></span>
-        <span id="config-dir-label">/config</span>
+      <div class="api-status-badge" id="traefik-status-badge">
+        <span class="dot-indicator unknown" id="traefik-api-dot"></span>
+        <span class="status-label" id="traefik-api-label">Traefik API</span>
+      </div>
+      <div class="env-badge" title="Dynamic configs directory">
+        <span class="env-path" id="config-dir-label">/config</span>
       </div>
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Main Content Area -->
   <main class="main" id="main">
-    <!-- Top bar -->
+    <!-- Topbar -->
     <header class="topbar">
-      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <h2 id="page-title">Dashboard</h2>
-      <div class="topbar-actions">
-        <div class="search-box" id="search-box" style="display:none">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="search-input" placeholder="Search...">
+      <div class="topbar-left">
+        <button class="btn-icon menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="breadcrumbs">
+          <span class="crumb-root">TRM</span>
+          <span class="crumb-separator">/</span>
+          <span class="crumb-active" id="page-title">Dashboard</span>
         </div>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Global Search / Command Palette trigger -->
+        <button class="cmd-palette-btn" id="open-cmd-btn" title="Open Command Palette (Ctrl+K)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Search or command...</span>
+          <kbd>Ctrl K</kbd>
+        </button>
+
+        <!-- Quick Add Dropdown -->
+        <div class="dropdown-wrap" id="quick-add-wrap">
+          <button class="btn btn-primary btn-sm" id="quick-add-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Create</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="dropdown-menu" id="quick-add-menu" style="width: 230px;">
+            <button onclick="openRouterDrawer(null, null, 'http', true)"><span class="dd-icon cyan">✨</span> New Route & Service</button>
+            <button onclick="openRouterDrawer(null, null, 'http', false)"><span class="dd-icon cyan">⇄</span> New Route Only</button>
+            <button onclick="openServiceDrawer()"><span class="dd-icon purple">⚙</span> New Service</button>
+            <button onclick="openMiddlewareDrawer()"><span class="dd-icon green">⤿</span> New Middleware</button>
+            <button onclick="openTransportDrawer()"><span class="dd-icon blue">⇆</span> New Transport</button>
+            <div class="dd-divider"></div>
+            <button onclick="openNewFileModal()"><span class="dd-icon amber">▤</span> New Config File</button>
+          </div>
+        </div>
+
+        <!-- Theme Switcher Dropdown -->
+        <div class="dropdown-wrap" id="theme-wrap">
+          <button class="btn-icon" id="theme-btn" title="Choose Color Theme">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          </button>
+          <div class="dropdown-menu" id="theme-menu" style="width: 220px;">
+            <div style="padding: 6px 10px 4px; font-size: 10px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em;">Theme & Color Scheme</div>
+            <button onclick="setAppTheme('obsidian')"><span class="dd-icon" style="color:#38bdf8;">✦</span> Obsidian Dark (Linear)</button>
+            <button onclick="setAppTheme('traefik')"><span class="dd-icon" style="color:#24a1c1;">⬡</span> Traefik Teal (Official)</button>
+            <button onclick="setAppTheme('carbon')"><span class="dd-icon" style="color:#00f0ff;">⚡</span> Carbon OLED (Minimal)</button>
+            <button onclick="setAppTheme('nord')"><span class="dd-icon" style="color:#cba6f7;">❄</span> Nord Soft Pastel</button>
+            <div class="dd-divider"></div>
+            <button onclick="setAppTheme('light')"><span class="dd-icon" style="color:#f59e0b;">☀️</span> Pure Light (Clean)</button>
+          </div>
+        </div>
+
+        <button class="btn-icon" id="btn-refresh" title="Reload data">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0118.8-4.3M22 12.5a10 10 0 01-18.8 4.2"/></svg>
+        </button>
       </div>
     </header>
 
-    <!-- Content views -->
+    <!-- Views Container -->
     <div class="content" id="content">
-      <!-- Dashboard View -->
       <section class="view active" id="view-dashboard"></section>
-      <!-- Routers View -->
+      <section class="view" id="view-topology"></section>
       <section class="view" id="view-routers"></section>
-      <!-- Services View -->
       <section class="view" id="view-services"></section>
-      <!-- Middlewares View -->
       <section class="view" id="view-middlewares"></section>
-      <!-- Files View -->
+      <section class="view" id="view-transports"></section>
       <section class="view" id="view-files"></section>
-      <!-- Backups View -->
       <section class="view" id="view-backups"></section>
+      <section class="view" id="view-logs"></section>
+      <section class="view" id="view-certificates"></section>
+      <section class="view" id="view-static"></section>
     </div>
   </main>
 
-  <!-- Modal Overlay -->
+  <!-- Slide-Over Drawer for Forms (with Live YAML Preview) -->
+  <div class="drawer-overlay" id="drawer-overlay">
+    <div class="drawer" id="drawer">
+      <div class="drawer-header">
+        <div class="drawer-title-wrap">
+          <h3 id="drawer-title">New Route</h3>
+          <span class="drawer-subtitle" id="drawer-subtitle">Dynamic Traefik Configuration</span>
+        </div>
+        <div class="drawer-tabs">
+          <button class="drawer-tab active" id="tab-form-btn" onclick="switchDrawerTab('form')">Form</button>
+          <button class="drawer-tab" id="tab-yaml-btn" onclick="switchDrawerTab('yaml')">Live YAML</button>
+        </div>
+        <button class="drawer-close" id="drawer-close" aria-label="Close drawer">&times;</button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="drawer-tab-content active" id="drawer-tab-form"></div>
+        <div class="drawer-tab-content" id="drawer-tab-yaml">
+          <div class="code-preview-wrap">
+            <pre><code id="drawer-yaml-code"></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer-footer" id="drawer-footer"></div>
+    </div>
+  </div>
+
+  <!-- Standard Modal Overlay (For raw views, confirms, etc.) -->
   <div class="modal-overlay" id="modal-overlay">
     <div class="modal" id="modal">
       <div class="modal-header">
@@ -107,9 +214,36 @@
     </div>
   </div>
 
+  <!-- Diff Modal for Backups -->
+  <div class="modal-overlay" id="diff-modal-overlay">
+    <div class="modal modal-xl" id="diff-modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="diff-modal-title">Backup Comparison</h3>
+          <span class="diff-subtitle" id="diff-modal-subtitle"></span>
+        </div>
+        <button class="modal-close" id="diff-modal-close">&times;</button>
+      </div>
+      <div class="modal-body modal-scrollable" id="diff-modal-body"></div>
+      <div class="modal-footer" id="diff-modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- Command Palette Modal (Ctrl+K) -->
+  <div class="cmd-overlay" id="cmd-overlay">
+    <div class="cmd-box" id="cmd-box">
+      <div class="cmd-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cmd-input" placeholder="Type a command, search routes, or jump to view..." autocomplete="off">
+        <kbd class="cmd-esc">ESC</kbd>
+      </div>
+      <div class="cmd-results" id="cmd-results"></div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
 
-  <script src="/js/app.js"></script>
+  <script src="/js/app.js?v=2.5.2"></script>
 </body>
 </html>
